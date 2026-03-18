@@ -1,3 +1,21 @@
+import { useEffect, useState } from "react";
+import { getUsers } from "../api/chatApi";
+
 export default function ChatPage() {
-  return <div>ChatPage - to be implemented</div>;
+ const [status, setStatus] = useState("Connecting...");
+// Happy path: Show connection status based on API call to getUsers. If successful, show "Connected". If it fails, show "Backend not available".
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        await getUsers();
+        setStatus("Connected");
+      } catch {
+        setStatus("Backend not available");
+      }
+    };
+
+    loadUsers();
+  }, []);
+
+  return <div>ChatPage - to be implemented. Connection to db: {status}</div>;
 }
