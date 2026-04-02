@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUsers } from "../api/chatApi";
+import Conversations from "./Conversations";
 
 export default function ChatPage() {
  const [status, setStatus] = useState("Connecting...");
@@ -17,5 +18,10 @@ export default function ChatPage() {
     loadUsers();
   }, []);
 
-  return <div>ChatPage - to be implemented. Connection to db: {status}</div>;
+  return (
+    <div>
+      ChatPage - to be implemented. Connection to db: {status} 
+
+      <Conversations/>
+    </div>);
 }

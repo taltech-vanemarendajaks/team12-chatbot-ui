@@ -111,3 +111,42 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.conversation-input {
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 3px 10px;
+}
+
+.conversation-btn {
+  border: 1px solid lightgray;
+  background-color: gainsboro;
+  border-radius: 10px;
+  padding: 3px 10px;
+}
+
+.active-conversation-btn {
+  border: 1px solid rgb(238, 241, 238);
+  background-color: rgb(229, 247, 229);
+  border-radius: 10px;
+  padding: 3px 10px;
+}
+
+.inactive-conversation-btn {
+  background-color: rgb(245, 243, 243);
+}
+
+.current-conversation {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 80%;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 50%;
+}
