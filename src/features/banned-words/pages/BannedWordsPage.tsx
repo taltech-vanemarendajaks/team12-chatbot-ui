@@ -143,7 +143,7 @@ export default function BannedWordsPage() {
                         py: 2.5,
                     }}
                 >
-                    <Typography variant="h5" fontWeight={700}>
+                    <Typography variant="h4" fontWeight={700}>
                         Keelatud sõnad
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.95, mt: 0.5 }}>
