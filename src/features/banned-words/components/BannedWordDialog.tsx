@@ -116,7 +116,7 @@ export default function BannedWordDialog({
         const payload: CreateBannedWordRequest | UpdateBannedWordRequest = {
             word: word.trim(),
             category,
-            severity: Number(severity),
+            severity,
             isActive: status === "active",
         };
 
