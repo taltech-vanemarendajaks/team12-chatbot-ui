@@ -1,11 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ChatPage } from "../features/chat/pages/ChatPage";
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import ChatPage from "../features/chat/pages/ChatPage";
+import { ChatPage } from "../features/chat/pages/ChatPage";
 import AdminLayout from "../features/admin/layout/AdminLayout";
 import StampAnswersPage from "../features/admin/pages/StampAnswersPage";
 
