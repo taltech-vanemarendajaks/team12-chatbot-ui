@@ -1,0 +1,9 @@
+.tmp
+**/.git
+**/build
+**/dist/**
+**/node_modules
+**/temp
+**/tmp
+**/coverage
+**/public
