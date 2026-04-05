@@ -22,7 +22,7 @@ const router = createBrowserRouter([
       },
       {
         path: "chatbot",
-        element: <div>TarkBot - Tuleb varsti</div>,
+        element: <div>BossBot - Tuleb varsti</div>,
       },
       {
         path: "stamp-answers",

@@ -22,7 +22,7 @@ import {
   People as PeopleIcon,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import tarkbotLogo from "../../../assets/images/tarkbot.svg";
+import bossbotLogo from "../../../assets/images/bossbot.svg";
 
 const drawerWidth = 240;
 
@@ -38,7 +38,7 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    text: "TarkBot",
+    text: "BossBot",
     icon: <HomeIcon />,
     path: "/admin/chatbot",
     enabled: true,
@@ -120,12 +120,12 @@ export default function AdminLayout() {
     <Box>
       <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
         <img
-          src={tarkbotLogo}
-          alt="TarkBot Logo"
+          src={bossbotLogo}
+          alt="BossBot Logo"
           style={{ width: 32, height: 32 }}
         />
         <Typography variant="h6" component="div" sx={{ color: "white" }}>
-          TarkBot Admin
+          BossBot Admin
         </Typography>
       </Box>
       <List>
@@ -195,12 +195,12 @@ export default function AdminLayout() {
             onClick={handleDrawerToggle}
           >
             <img
-              src={tarkbotLogo}
-              alt="TarkBot Logo"
+              src={bossbotLogo}
+              alt="BossBot Logo"
               style={{ width: 32, height: 32 }}
             />
             <Typography variant="h6" noWrap component="div">
-              TarkBot Admin
+              BossBot Admin
             </Typography>
           </Box>
           <Button color="inherit" onClick={handleAuthAction}>

@@ -25,8 +25,6 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Search as SearchIcon,
-  Delete as DeleteIcon,
-  CheckCircle as CheckCircleIcon,
 } from "@mui/icons-material";
 import { stampAnswerApi } from "../api/stampAnswerApi";
 import type { StampAnswer } from "../types/stampAnswer.types";
