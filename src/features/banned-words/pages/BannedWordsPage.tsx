@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, Box, Paper, Typography } from "@mui/material";
 import {
     createBannedWord,
-    deleteBannedWord,
     getBannedWords,
     updateBannedWord,
 } from "../api/bannedWordsApi";
@@ -11,6 +10,7 @@ import BannedWordsTable from "../components/BannedWordsTable";
 import BannedWordsToolbar, {
     type StatusFilter,
 } from "../components/BannedWordsToolbar";
+import ConfirmDialog from "../components/ConfirmDialog";
 import type {
     BannedWord,
     CreateBannedWordRequest,
@@ -28,6 +28,9 @@ export default function BannedWordsPage() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMode, setDialogMode] = useState<"create" | "edit">("create");
     const [selectedRow, setSelectedRow] = useState<BannedWord | null>(null);
+
+    const [toggleDialogOpen, setToggleDialogOpen] = useState(false);
+    const [toggleTarget, setToggleTarget] = useState<BannedWord | null>(null);
 
     const loadRows = async () => {
         try {
@@ -110,14 +113,27 @@ export default function BannedWordsPage() {
         }
     };
 
-    const handleDelete = async (id: number) => {
+    const handleToggleActive = (row: BannedWord) => {
+        setToggleTarget(row);
+        setToggleDialogOpen(true);
+    };
+
+    const confirmToggleActive = async () => {
+        if (!toggleTarget) {
+            return;
+        }
+
         try {
             setErrorMessage("");
-            await deleteBannedWord(id);
+            await updateBannedWord(toggleTarget.id, {
+                isActive: !toggleTarget.isActive,
+            });
+            setToggleDialogOpen(false);
+            setToggleTarget(null);
             await loadRows();
         } catch (error) {
             console.error(error);
-            setErrorMessage("Keelatud sõna kustutamine ebaõnnestus.");
+            setErrorMessage("Keelatud sõna oleku muutmine ebaõnnestus.");
         }
     };
 
@@ -178,7 +194,7 @@ export default function BannedWordsPage() {
                         rows={filteredRows}
                         loading={loading}
                         onEditClick={handleOpenEditDialog}
-                        onDeleteClick={(id) => void handleDelete(id)}
+                        onToggleActiveClick={handleToggleActive}
                     />
                 </Box>
             </Paper>
@@ -189,6 +205,39 @@ export default function BannedWordsPage() {
                 initialData={selectedRow}
                 onClose={handleCloseDialog}
                 onSubmit={handleDialogSubmit}
+            />
+
+            <ConfirmDialog
+                open={toggleDialogOpen}
+                title={
+                    toggleTarget
+                        ? toggleTarget.isActive
+                            ? "Inaktiveeri keelatud sõna"
+                            : "Aktiveeri keelatud sõna"
+                        : "Muuda olekut"
+                }
+                description={
+                    toggleTarget
+                        ? toggleTarget.isActive
+                            ? `Kas soovid inaktiveerida sõna "${toggleTarget.word}"?`
+                            : `Kas soovid aktiveerida sõna "${toggleTarget.word}"?`
+                        : undefined
+                }
+                confirmText={
+                    toggleTarget
+                        ? toggleTarget.isActive
+                            ? "Inaktiveeri"
+                            : "Aktiveeri"
+                        : "Kinnita"
+                }
+                confirmColor={
+                    toggleTarget?.isActive ? "error" : "success"
+                }
+                onConfirm={confirmToggleActive}
+                onClose={() => {
+                    setToggleDialogOpen(false);
+                    setToggleTarget(null);
+                }}
             />
         </Box>
     );

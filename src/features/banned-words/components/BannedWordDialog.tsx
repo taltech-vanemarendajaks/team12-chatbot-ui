@@ -54,7 +54,6 @@ export default function BannedWordDialog({
     const [word, setWord] = useState("");
     const [category, setCategory] = useState("");
     const [severity, setSeverity] = useState<string>("");
-    const [status, setStatus] = useState<"active" | "inactive">("active");
     const [errors, setErrors] = useState<FormErrors>(initialErrors);
 
     useEffect(() => {
@@ -72,14 +71,12 @@ export default function BannedWordDialog({
                     ? String(initialData.severity)
                     : "",
             );
-            setStatus(initialData.isActive ? "active" : "inactive");
             return;
         }
 
         setWord("");
         setCategory("");
         setSeverity("");
-        setStatus("active");
     }, [open, mode, initialData]);
 
     const validateForm = () => {
@@ -117,7 +114,7 @@ export default function BannedWordDialog({
             word: word.trim(),
             category,
             severity,
-            isActive: status === "active",
+            isActive: mode === "edit" ? initialData?.isActive ?? true : true,
         };
 
         await onSubmit(payload);
@@ -195,21 +192,6 @@ export default function BannedWordDialog({
                             ))}
                         </Select>
                         <FormHelperText>{errors.severity}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl fullWidth>
-                        <InputLabel id="banned-word-status-label">Staatus</InputLabel>
-                        <Select
-                            labelId="banned-word-status-label"
-                            value={status}
-                            label="Staatus"
-                            onChange={(event) =>
-                                setStatus(event.target.value as "active" | "inactive")
-                            }
-                        >
-                            <MenuItem value="active">Aktiivne</MenuItem>
-                            <MenuItem value="inactive">Mitteaktiivne</MenuItem>
-                        </Select>
                     </FormControl>
                 </Stack>
             </DialogContent>
