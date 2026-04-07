@@ -2,8 +2,8 @@ import {
     Box,
     Button,
     Chip,
+    IconButton,
     Paper,
-    Stack,
     Table,
     TableBody,
     TableCell,
@@ -11,20 +11,21 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import type { BannedWord } from "../types";
 
 interface BannedWordsTableProps {
     rows: BannedWord[];
     loading: boolean;
     onEditClick: (row: BannedWord) => void;
-    onDeleteClick: (id: number) => void;
+    onToggleActiveClick: (row: BannedWord) => void;
 }
 
 export default function BannedWordsTable({
                                              rows,
                                              loading,
                                              onEditClick,
-                                             onDeleteClick,
+                                             onToggleActiveClick,
                                          }: BannedWordsTableProps) {
     const renderContent = () => {
         if (loading) {
@@ -48,7 +49,11 @@ export default function BannedWordsTable({
         }
 
         return rows.map((row) => (
-            <TableRow key={row.id} hover>
+            <TableRow
+                key={row.id}
+                hover
+                sx={{ "&:hover": { bgcolor: "action.hover" } }}
+            >
                 <TableCell>
                     <Typography fontWeight={600} color="text.primary">
                         {row.word}
@@ -59,7 +64,7 @@ export default function BannedWordsTable({
 
                 <TableCell>{row.severity ?? "-"}</TableCell>
 
-                <TableCell>
+                <TableCell align="center">
                     <Chip
                         label={row.isActive ? "Aktiivne" : "Mitteaktiivne"}
                         color={row.isActive ? "success" : "default"}
@@ -68,24 +73,29 @@ export default function BannedWordsTable({
                 </TableCell>
 
                 <TableCell align="right">
-                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => onEditClick(row)}
-                        >
-                            Muuda
-                        </Button>
+                    <IconButton
+                        onClick={() => onEditClick(row)}
+                        sx={{ color: "primary.main" }}
+                        title="Muuda"
+                    >
+                        <EditIcon />
+                    </IconButton>
 
-                        <Button
-                            variant="contained"
-                            color="error"
-                            size="small"
-                            onClick={() => onDeleteClick(row.id)}
-                        >
-                            Kustuta
-                        </Button>
-                    </Stack>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => onToggleActiveClick(row)}
+                        sx={{
+                            ml: 1,
+                            bgcolor: row.isActive ? "error.main" : "success.main",
+                            color: "white",
+                            "&:hover": {
+                                bgcolor: row.isActive ? "error.dark" : "success.dark",
+                            },
+                        }}
+                    >
+                        {row.isActive ? "Inaktiveeri" : "Aktiveeri"}
+                    </Button>
                 </TableCell>
             </TableRow>
         ));
@@ -113,7 +123,10 @@ export default function BannedWordsTable({
                             <TableCell sx={{ color: "text.secondary", fontWeight: 600 }}>
                                 Raskusaste
                             </TableCell>
-                            <TableCell sx={{ color: "text.secondary", fontWeight: 600 }}>
+                            <TableCell
+                                align="center"
+                                sx={{ color: "text.secondary", fontWeight: 600 }}
+                            >
                                 Staatus
                             </TableCell>
                             <TableCell
