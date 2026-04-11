@@ -58,6 +58,8 @@ export function useChatWebSocket() {
     );
     const warningTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const rateLimitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
 
     const connect = useCallback(() => {
         const ws = new WebSocket(getWsUrl());
@@ -118,6 +120,16 @@ export function useChatWebSocket() {
                     if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
                     errorTimerRef.current = setTimeout(() => setError(null), 5000);
                     break;
+
+                case "RATE_LIMITED":
+                    setSending(false);
+                    setRateLimitedUntil(Date.now() + response.retryAfterMs);
+                    setWarning(`Too many messages. Please wait ${Math.ceil(response.retryAfterMs / 1000)}s.`);
+                    if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
+                    warningTimerRef.current = setTimeout(() => setWarning(null), response.retryAfterMs + 500);
+                    if (rateLimitTimerRef.current) clearTimeout(rateLimitTimerRef.current);
+                    rateLimitTimerRef.current = setTimeout(() => setRateLimitedUntil(null), response.retryAfterMs);
+                    break;
             }
         };
 
@@ -156,6 +168,10 @@ export function useChatWebSocket() {
 
             if (errorTimerRef.current) {
                 clearTimeout(errorTimerRef.current);
+            }
+
+            if (rateLimitTimerRef.current) {
+                clearTimeout(rateLimitTimerRef.current);
             }
 
             if (wsRef.current) {
@@ -206,5 +222,6 @@ export function useChatWebSocket() {
         maxMessageLength,
         sendMessage,
         resetChat,
+        rateLimitedUntil,
     };
 }

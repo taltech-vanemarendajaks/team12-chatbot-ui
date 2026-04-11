@@ -6,11 +6,11 @@ export const InputWrapper = styled("div")({
 });
 
 export const InputBar = styled("div")<{ overLimit?: boolean }>(
-    ({ overLimit }) => ({
+    ({ theme, overLimit }) => ({
         display: "flex",
         alignItems: "flex-end",
         gap: "0.5rem",
-        backgroundColor: "var(--code-bg)",
+        backgroundColor: theme.vars!.palette.codeBg,
         borderRadius: "1rem",
         padding: "0.5rem 1rem",
         border: "2px solid",
@@ -19,13 +19,13 @@ export const InputBar = styled("div")<{ overLimit?: boolean }>(
     }),
 );
 
-export const InputTextarea = styled("textarea")({
+export const InputTextarea = styled("textarea")(({ theme }) => ({
     flex: 1,
     width: "100%",
     resize: "none",
     background: "transparent",
     outline: "none",
-    color: "var(--text-h)",
+    color: theme.vars!.palette.text.primary,
     fontSize: "0.875rem",
     lineHeight: 1.625,
     maxHeight: "8rem",
@@ -35,14 +35,14 @@ export const InputTextarea = styled("textarea")({
     padding: 0,
     textAlign: "left",
     "&::placeholder": {
-        color: "var(--text)",
+        color: theme.vars!.palette.text.secondary,
     },
-});
+}));
 
 export const CharCounter = styled("span")<{ overLimit?: boolean }>(
-    ({ overLimit }) => ({
+    ({ theme, overLimit }) => ({
         fontSize: "0.75rem",
-        color: overLimit ? "#ef4444" : "var(--text)",
+        color: overLimit ? "#ef4444" : theme.vars!.palette.text.secondary,
         paddingTop: "0.25rem",
         display: "block",
         textAlign: "left",
@@ -56,10 +56,10 @@ export const InputTextareaWrapper = styled("div")({
 });
 
 export const SendButton = styled(IconButton)<{ active?: boolean }>(
-    ({ active }) => ({
-        color: active ? "var(--accent)" : "var(--text)",
+    ({ theme, active }) => ({
+        color: active ? theme.vars!.palette.secondary.main : theme.vars!.palette.text.secondary,
         "&:hover": {
-            backgroundColor: "var(--accent-bg)",
+            backgroundColor: theme.vars!.palette.accentBg,
         },
     }),
 );
