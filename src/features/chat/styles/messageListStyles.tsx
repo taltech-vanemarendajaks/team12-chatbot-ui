@@ -11,13 +11,13 @@ export const MessageListInner = styled("div")({
     padding: "1rem",
 });
 
-export const MessageListEmpty = styled("div")({
+export const MessageListEmpty = styled("div")(({ theme }) => ({
     flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "var(--text)",
-});
+    color: theme.vars!.palette.text.secondary,
+}));
 
 export const MessageListEmptyText = styled("p")({
     fontSize: "1.125rem",

@@ -2,13 +2,13 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 
 export const SidebarRoot = styled("aside")<{ collapsed?: boolean }>(
-    ({ collapsed }) => ({
+    ({ theme, collapsed }) => ({
         width: collapsed ? "48px" : "280px",
         flexShrink: 0,
         display: "flex",
         flexDirection: "column",
-        borderLeft: "1px solid var(--border)",
-        backgroundColor: "var(--bg)",
+        borderLeft: `1px solid ${theme.vars!.palette.border}`,
+        backgroundColor: theme.vars!.palette.background.default,
         height: "100svh",
         overflow: "hidden",
         transition: "width 0.2s ease",
@@ -16,21 +16,21 @@ export const SidebarRoot = styled("aside")<{ collapsed?: boolean }>(
 );
 
 export const SidebarHeader = styled("div")<{ collapsed?: boolean }>(
-    ({ collapsed }) => ({
+    ({ theme, collapsed }) => ({
         padding: "0.75rem 1rem",
-        borderBottom: collapsed ? "none" : "1px solid var(--border)",
+        borderBottom: collapsed ? "none" : `1px solid ${theme.vars!.palette.border}`,
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
     }),
 );
 
-export const SidebarTitle = styled("h2")({
+export const SidebarTitle = styled("h2")(({ theme }) => ({
     fontSize: "1rem",
     fontWeight: 600,
-    color: "var(--text-h)",
+    color: theme.vars!.palette.text.primary,
     margin: 0,
-});
+}));
 
 export const SidebarList = styled("div")({
     flex: 1,
@@ -39,7 +39,7 @@ export const SidebarList = styled("div")({
 });
 
 export const SidebarItem = styled("button")<{ selected?: boolean }>(
-    ({ selected }) => ({
+    ({ theme, selected }) => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -49,13 +49,13 @@ export const SidebarItem = styled("button")<{ selected?: boolean }>(
         borderRadius: "0.5rem",
         border: "none",
         cursor: "pointer",
-        backgroundColor: selected ? "var(--accent-bg)" : "transparent",
-        color: selected ? "var(--accent)" : "var(--text-h)",
+        backgroundColor: selected ? theme.vars!.palette.accentBg : "transparent",
+        color: selected ? theme.vars!.palette.secondary.main : theme.vars!.palette.text.primary,
         fontWeight: selected ? 600 : 400,
         fontSize: "0.875rem",
         transition: "background-color 0.15s, color 0.15s",
         "&:hover": {
-            backgroundColor: selected ? "var(--accent-bg)" : "var(--code-bg)",
+            backgroundColor: selected ? theme.vars!.palette.accentBg : theme.vars!.palette.codeBg,
         },
     }),
 );
@@ -72,57 +72,56 @@ export const SidebarItemTitle = styled("span")({
     whiteSpace: "nowrap",
 });
 
-export const SidebarItemTime = styled("span")({
+export const SidebarItemTime = styled("span")(({ theme }) => ({
     display: "block",
     fontSize: "0.75rem",
-    color: "var(--text)",
+    color: theme.vars!.palette.text.secondary,
     marginTop: "0.125rem",
-});
+}));
 
-export const SidebarEmpty = styled("p")({
+export const SidebarEmpty = styled("p")(({ theme }) => ({
     padding: "1rem",
     textAlign: "center" as const,
-    color: "var(--text)",
+    color: theme.vars!.palette.text.secondary,
     fontSize: "0.875rem",
-});
+}));
 
-export const SidebarCreateForm = styled("div")({
+export const SidebarCreateForm = styled("div")(({ theme }) => ({
     padding: "0.75rem",
-    borderBottom: "1px solid var(--border)",
+    borderBottom: `1px solid ${theme.vars!.palette.border}`,
     display: "flex",
     gap: "0.5rem",
-});
+}));
 
-export const SidebarInput = styled("input")({
+export const SidebarInput = styled("input")(({ theme }) => ({
     flex: 1,
     padding: "0.375rem 0.625rem",
     borderRadius: "0.375rem",
-    border: "1px solid var(--border)",
-    backgroundColor: "var(--code-bg)",
-    color: "var(--text-h)",
+    border: `1px solid ${theme.vars!.palette.border}`,
+    backgroundColor: theme.vars!.palette.codeBg,
+    color: theme.vars!.palette.text.primary,
     fontSize: "0.8125rem",
     fontFamily: "inherit",
     outline: "none",
     "&::placeholder": {
-        color: "var(--text)",
+        color: theme.vars!.palette.text.secondary,
     },
-});
+}));
 
-export const SidebarIconButton = styled(IconButton)({
-    color: "var(--text-h)",
-});
+export const SidebarIconButton = styled(IconButton)(({ theme }) => ({
+    color: theme.vars!.palette.text.primary,
+}));
 
-export const SidebarAddButton = styled(IconButton)({
-    color: "var(--accent)",
+export const SidebarAddButton = styled(IconButton)(({ theme }) => ({
+    color: theme.vars!.palette.secondary.main,
     marginLeft: "auto",
-});
+}));
 
-export const SidebarDeleteButton = styled(IconButton)({
-    color: "var(--text)",
+export const SidebarDeleteButton = styled(IconButton)(({ theme }) => ({
+    color: theme.vars!.palette.text.secondary,
     opacity: 0.5,
     "&:hover": {
         opacity: 1,
         color: "#dc2626",
     },
-});
-
+}));

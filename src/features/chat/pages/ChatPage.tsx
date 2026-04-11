@@ -40,6 +40,7 @@ export function ChatPage() {
         maxMessageLength,
         sendMessage,
         resetChat,
+        rateLimitedUntil,
     } = useChatWebSocket();
 
     // Load conversations on connect
@@ -187,7 +188,8 @@ export function ChatPage() {
                             <MessageInput
                                 onSend={handleSend}
                                 disabled={
-                                    sending || streamingContent !== null
+                                    sending || streamingContent !== null ||
+                                    (rateLimitedUntil !== null && Date.now() < rateLimitedUntil)
                                 }
                                 maxLength={maxMessageLength}
                             />
