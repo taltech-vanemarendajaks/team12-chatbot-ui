@@ -108,7 +108,9 @@ export function useChatWebSocket() {
 
                 case "STREAM_END":
                     setStreamingContent(null);
-                    setMessages((prev) => [...prev, response.message]);
+                    if (response.message) {
+                        setMessages((prev) => [...prev, response.message]);
+                    }
                     setSending(false);
                     break;
 
