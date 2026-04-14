@@ -10,28 +10,28 @@ export const ConfirmOverlay = styled("div")({
     zIndex: 1300,
 });
 
-export const ConfirmBox = styled("div")({
-    backgroundColor: "var(--bg)",
-    border: "1px solid var(--border)",
+export const ConfirmBox = styled("div")(({ theme }) => ({
+    backgroundColor: theme.vars!.palette.background.default,
+    border: `1px solid ${theme.vars!.palette.border}`,
     borderRadius: "0.75rem",
     padding: "1.5rem",
     maxWidth: "400px",
     width: "90%",
-});
+}));
 
-export const ConfirmTitle = styled("h3")({
+export const ConfirmTitle = styled("h3")(({ theme }) => ({
     margin: "0 0 0.5rem",
     fontSize: "1rem",
     fontWeight: 600,
-    color: "var(--text-h)",
-});
+    color: theme.vars!.palette.text.primary,
+}));
 
-export const ConfirmMessage = styled("p")({
+export const ConfirmMessage = styled("p")(({ theme }) => ({
     margin: "0 0 1.25rem",
     fontSize: "0.875rem",
-    color: "var(--text)",
+    color: theme.vars!.palette.text.secondary,
     lineHeight: 1.5,
-});
+}));
 
 export const ConfirmActions = styled("div")({
     display: "flex",
@@ -39,19 +39,19 @@ export const ConfirmActions = styled("div")({
     gap: "0.5rem",
 });
 
-export const CancelButton = styled("button")({
+export const CancelButton = styled("button")(({ theme }) => ({
     padding: "0.5rem 1rem",
     borderRadius: "0.375rem",
-    border: "1px solid var(--border)",
-    backgroundColor: "var(--code-bg)",
-    color: "var(--text-h)",
+    border: `1px solid ${theme.vars!.palette.border}`,
+    backgroundColor: theme.vars!.palette.codeBg,
+    color: theme.vars!.palette.text.primary,
     fontSize: "0.875rem",
     cursor: "pointer",
     fontFamily: "inherit",
     "&:hover": {
-        backgroundColor: "var(--border)",
+        backgroundColor: theme.vars!.palette.border,
     },
-});
+}));
 
 export const ConfirmButton = styled("button")({
     padding: "0.5rem 1rem",

@@ -1,4 +1,4 @@
-import { keyframes, styled } from "@mui/material/styles";
+import { keyframes, styled, type Theme } from "@mui/material/styles";
 
 import type { MessageSeverity } from "../types/message";
 
@@ -7,12 +7,12 @@ type BubbleContentProps = {
     severity?: MessageSeverity;
 };
 
-function getBubbleBackground(isUser: boolean, severity?: MessageSeverity) {
+function getBubbleBackground(theme: Theme, isUser: boolean, severity?: MessageSeverity) {
     if (severity === "HIGH") return "#dc2626";
     if (severity === "LOW") return "#d97706";
-    if (isUser) return "var(--accent)";
+    if (isUser) return theme.vars!.palette.secondary.main;
 
-    return "var(--code-bg)";
+    return theme.vars!.palette.codeBg;
 }
 
 export const BubbleRow = styled("div")<{ isUser: boolean }>(({ isUser }) => ({
@@ -22,12 +22,12 @@ export const BubbleRow = styled("div")<{ isUser: boolean }>(({ isUser }) => ({
 }));
 
 export const BubbleContent = styled("div")<BubbleContentProps>(
-    ({ isUser, severity }) => ({
+    ({ theme, isUser, severity }) => ({
         maxWidth: "70%",
         borderRadius: "1rem",
         padding: "0.625rem 1rem",
-        backgroundColor: getBubbleBackground(isUser, severity),
-        color: isUser || severity ? "white" : "var(--text-h)",
+        backgroundColor: getBubbleBackground(theme, isUser, severity),
+        color: isUser || severity ? "white" : theme.vars!.palette.text.primary,
         ...(isUser
             ? { borderBottomRightRadius: "0.25rem" }
             : { borderBottomLeftRadius: "0.25rem" }),
@@ -41,13 +41,13 @@ export const BubbleText = styled("p")({
 });
 
 export const BubbleTime = styled("p")<{ isUser: boolean; severity?: MessageSeverity }>(
-    ({ isUser, severity }) => ({
+    ({ theme, isUser, severity }) => ({
         fontSize: "10px",
         marginTop: "0.25rem",
         textAlign: isUser ? ("right" as const) : ("left" as const),
         ...(isUser || severity
             ? { color: "rgba(255, 255, 255, 0.7)" }
-            : { color: "var(--text)" }),
+            : { color: theme.vars!.palette.text.secondary }),
     }),
 );
 

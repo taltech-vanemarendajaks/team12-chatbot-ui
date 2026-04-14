@@ -12,4 +12,5 @@ export type ChatWebSocketResponse =
     | { type: "STREAM_START"; conversationId: number }
     | { type: "STREAM_TOKEN"; token: string }
     | { type: "STREAM_END"; message: Message }
-    | { type: "ERROR"; text: string };
+    | { type: "ERROR"; text: string }
+    | { type: "RATE_LIMITED"; text: string; retryAfterMs: number };
