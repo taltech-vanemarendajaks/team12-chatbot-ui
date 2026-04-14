@@ -39,6 +39,7 @@ export function ChatPage() {
         connected,
         maxMessageLength,
         sendMessage,
+        stopGeneration,
         resetChat,
     } = useChatWebSocket();
 
@@ -146,6 +147,11 @@ export function ChatPage() {
         [sendMessage, selectedConversationId],
     );
 
+    const handleStop = useCallback(() => {
+        if (selectedConversationId === null) return;
+        stopGeneration(selectedConversationId);
+    }, [stopGeneration, selectedConversationId]);
+
     if (!connected) {
         return (
             <ChatLayoutRoot>
@@ -186,9 +192,11 @@ export function ChatPage() {
                         <ChatPageInputWrapper>
                             <MessageInput
                                 onSend={handleSend}
+                                onStop={handleStop}
                                 disabled={
                                     sending || streamingContent !== null
                                 }
+                                isStreaming={streamingContent !== null}
                                 maxLength={maxMessageLength}
                             />
                         </ChatPageInputWrapper>

@@ -63,3 +63,10 @@ export const SendButton = styled(IconButton)<{ active?: boolean }>(
         },
     }),
 );
+
+export const StopButton = styled(IconButton)({
+    color: "#ef4444",
+    "&:hover": {
+        backgroundColor: "rgba(239, 68, 68, 0.1)",
+    },
+});

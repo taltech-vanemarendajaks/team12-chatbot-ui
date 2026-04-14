@@ -1,10 +1,8 @@
 import type { Message } from "./message";
 
-export type ChatWebSocketMessage = {
-    type: "SEND_MESSAGE";
-    conversationId: number;
-    content: string;
-};
+export type ChatWebSocketMessage =
+    | { type: "SEND_MESSAGE"; conversationId: number; content: string }
+    | { type: "STOP_GENERATION"; conversationId: number };
 
 export type ChatWebSocketResponse =
     | { type: "CONFIG"; maxMessageLength: number }

@@ -108,7 +108,9 @@ export function useChatWebSocket() {
 
                 case "STREAM_END":
                     setStreamingContent(null);
-                    setMessages((prev) => [...prev, response.message]);
+                    if (response.message) {
+                        setMessages((prev) => [...prev, response.message]);
+                    }
                     setSending(false);
                     break;
 
@@ -187,6 +189,20 @@ export function useChatWebSocket() {
         [],
     );
 
+    const stopGeneration = useCallback(
+        (conversationId: number) => {
+            if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+
+            const msg: ChatWebSocketMessage = {
+                type: "STOP_GENERATION",
+                conversationId,
+            };
+
+            wsRef.current.send(JSON.stringify(msg));
+        },
+        [],
+    );
+
     const resetChat = useCallback(() => {
         setMessages([]);
         setStreamingContent(null);
@@ -205,6 +221,7 @@ export function useChatWebSocket() {
         connected,
         maxMessageLength,
         sendMessage,
+        stopGeneration,
         resetChat,
     };
 }

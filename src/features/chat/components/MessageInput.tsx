@@ -1,4 +1,5 @@
 import SendIcon from "@mui/icons-material/Send";
+import StopIcon from "@mui/icons-material/Stop";
 import { type ChangeEvent, type KeyboardEvent, useRef, useState } from "react";
 
 import {
@@ -8,15 +9,18 @@ import {
     InputTextareaWrapper,
     InputWrapper,
     SendButton,
+    StopButton,
 } from "../styles/messageInputStyles";
 
 type MessageInputProps = {
     onSend: (content: string) => void;
+    onStop?: () => void;
     disabled: boolean;
+    isStreaming: boolean;
     maxLength: number | null;
 };
 
-export function MessageInput({ onSend, disabled, maxLength }: MessageInputProps) {
+export function MessageInput({ onSend, onStop, disabled, isStreaming, maxLength }: MessageInputProps) {
     const [text, setText] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -72,14 +76,24 @@ export function MessageInput({ onSend, disabled, maxLength }: MessageInputProps)
                     )}
                 </InputTextareaWrapper>
 
-                <SendButton
-                    onClick={handleSend}
-                    disabled={!canSend}
-                    size="small"
-                    active={canSend}
-                >
-                    <SendIcon fontSize="small" />
-                </SendButton>
+                {isStreaming ? (
+                    <StopButton
+                        onClick={onStop}
+                        size="small"
+                        aria-label="Stop generation"
+                    >
+                        <StopIcon fontSize="small" />
+                    </StopButton>
+                ) : (
+                    <SendButton
+                        onClick={handleSend}
+                        disabled={!canSend}
+                        size="small"
+                        active={canSend}
+                    >
+                        <SendIcon fontSize="small" />
+                    </SendButton>
+                )}
             </InputBar>
         </InputWrapper>
     );
