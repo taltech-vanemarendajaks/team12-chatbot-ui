@@ -19,7 +19,7 @@ export default function BannedWordsForm({ onSubmit }: BannedWordsFormProps) {
         await onSubmit({
             word: word.trim(),
             category: category.trim() || undefined,
-            severity: severity === "" ? undefined : Number(severity),
+            severity: severity === "" ? undefined : String(severity),
             isActive,
         });
 
