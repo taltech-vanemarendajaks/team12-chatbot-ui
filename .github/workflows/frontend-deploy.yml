@@ -1,0 +1,48 @@
+name: Frontend deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: "dist/*"
+          target: "/tmp/bossbot-deploy"
+
+      - name: Activate on server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            sudo mkdir -p ${{ vars.DEPLOY_PATH_FRONTEND }}
+            sudo rm -rf ${{ vars.DEPLOY_PATH_FRONTEND }}/*
+            sudo cp -r /tmp/bossbot-deploy/dist/* ${{ vars.DEPLOY_PATH_FRONTEND }}/
+            sudo systemctl reload nginx
