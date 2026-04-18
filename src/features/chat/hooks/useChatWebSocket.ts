@@ -10,9 +10,8 @@ import type {
 const MAX_RECONNECT_DELAY = 30_000;
 
 function getWsUrl(): string {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
-
-    return baseUrl.replace(/^http/, "ws") + "/ws/chat";
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${window.location.host}/api/ws/chat`;
 }
 
 function tagLastUserMessage(
