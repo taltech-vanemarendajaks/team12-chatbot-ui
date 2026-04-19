@@ -1,4 +1,4 @@
-import { apiClient } from '../../../shared/ui/services/apiClient';
+import { apiClient } from '../../../shared/services/apiClient';
 import type { StampAnswer, CreateStampAnswerRequest, UpdateStampAnswerRequest } from '../types/stampAnswer.types';
 
 const STAMP_ANSWERS_BASE_URL = '/api/v1/stamp-answers';

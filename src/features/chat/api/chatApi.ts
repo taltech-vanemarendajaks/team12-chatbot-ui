@@ -1,4 +1,4 @@
-import { apiClient } from "@/shared/ui/services/apiClient";
+import { apiClient } from "@/shared/services/apiClient.ts";
 import { userEndpoints, conversationEndpoints } from "./endpoints";
 import type { Conversation } from "@/app/models/Conversation";
 
