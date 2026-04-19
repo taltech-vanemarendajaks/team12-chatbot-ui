@@ -53,7 +53,7 @@ export async function fetchLocalDevSecurityStatus(): Promise<LocalDevSecurity> {
 }
 
 export function getLoginPage() {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
+    const baseUrl = import.meta.env.VITE_AUTH_BASE_URL;
     const login = authEndpoints.getLogin;
 
     return `${baseUrl}${login}`;

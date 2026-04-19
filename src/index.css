@@ -4,7 +4,6 @@
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
-  --login-box-bg: #f7f7fa;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
@@ -21,6 +20,8 @@
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -36,7 +37,6 @@
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #16171d;
-    --login-box-bg: #232334;
     --border: #2e303a;
     --code-bg: #1f2028;
     --accent: #c084fc;
@@ -65,9 +65,14 @@ body {
   margin: 0;
 }
 
-h1 {
+h1,
+h2 {
   font-family: var(--heading);
   font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
   margin: 32px 0;
@@ -77,8 +82,6 @@ h1 {
   }
 }
 h2 {
-  font-family: var(--heading);
-  font-weight: 500;
   font-size: 24px;
   line-height: 118%;
   letter-spacing: -0.24px;
@@ -96,13 +99,16 @@ code,
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
+  color: var(--text-h);
 }
 
 code {
   font-size: 15px;
   line-height: 135%;
   padding: 4px 8px;
+  background: var(--code-bg);
 }
+
 
 button:hover {
   cursor: pointer;
@@ -112,4 +118,17 @@ button:hover {
 button:disabled {
   cursor: default;
   opacity: 50%;
+}
+
+.login-form-compact > *:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.login-form-compact > *:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.login-form-compact {
+  margin-bottom: -80px; /* increased from -40px to -80px for more compactness */
+  margin-top: -80px;    /* increased from -40px to -80px for more compactness */
 }
