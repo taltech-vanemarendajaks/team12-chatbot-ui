@@ -20,6 +20,7 @@ import {
   Block as BlockIcon,
   Description as DescriptionIcon,
   People as PeopleIcon,
+  BarChart as BarChartIcon,
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import bossbotLogo from "../../../assets/images/bossbot.svg";
@@ -67,6 +68,12 @@ const menuItems: MenuItem[] = [
     path: "/admin/users",
     enabled: true,
   },
+  {
+    text: "Mõõdikud",
+    icon: <BarChartIcon />,
+    path: "/admin/metrics",
+    enabled: true,
+  },
 ];
 
 export default function AdminLayout() {
@@ -101,10 +108,19 @@ export default function AdminLayout() {
   };
 
   const handleNavigation = (path: string, enabled: boolean) => {
-    if (enabled) {
-      navigate(path);
-      setDrawerOpen(false); // Close drawer after navigation
+    if (!enabled) return;
+    
+    // Special handling for metrics - open Grafana in new tab
+    if (path === "/admin/metrics") {
+      const grafanaUrl = import.meta.env.VITE_GRAFANA_URL || "http://localhost:3000";
+      window.open(grafanaUrl, "_blank", "noopener,noreferrer");
+      setDrawerOpen(false);
+      return;
     }
+    
+    // Normal navigation for other routes
+    navigate(path);
+    setDrawerOpen(false);
   };
 
   const handleAuthAction = () => {
