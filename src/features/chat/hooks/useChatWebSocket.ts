@@ -11,7 +11,7 @@ const MAX_RECONNECT_DELAY = 30_000;
 
 function getWsUrl(): string {
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    return `${protocol}//${window.location.host}/api/ws/chat`;
+    return `${protocol}//${window.location.host}/ws/chat`;
 }
 
 function tagLastUserMessage(

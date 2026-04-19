@@ -1,4 +1,4 @@
-import { apiClient } from "@/shared/ui/services/apiClient";
+import { apiClient } from "@/shared/services/apiClient.ts";
 import type {
     BannedWord,
     CreateBannedWordRequest,
