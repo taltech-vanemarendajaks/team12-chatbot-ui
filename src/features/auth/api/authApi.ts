@@ -52,9 +52,7 @@ export async function fetchLocalDevSecurityStatus(): Promise<LocalDevSecurity> {
     }
 }
 
-export function getLoginPage() {
-    const baseUrl = import.meta.env.VITE_AUTH_BASE_URL;
-    const login = authEndpoints.getLogin;
-
-    return `${baseUrl}${login}`;
+export function getLoginPage(): string {
+    return authEndpoints.getLogin;
 }
+
