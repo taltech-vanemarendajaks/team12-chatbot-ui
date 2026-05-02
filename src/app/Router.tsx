@@ -12,6 +12,7 @@ import { ProtectedRoute } from '../features/auth/ProtectedRoute';
 import { fetchLocalDevSecurityStatus } from '../features/auth/api/authApi';
 import { useEffect, useState } from 'react';
 import Spinner from '@/shared/ui/Spinner.tsx';
+import { UnauthorizedPage } from '../features/auth/pages/UnauthorizedPage.tsx';
 // import { RegisterPage } from '@/features/auth/pages/RegisterPage.tsx';
 
 /**
@@ -42,10 +43,10 @@ function Router() {
             path: '/login',
             element: <LoginPage />,
         },
-        // {
-        //     path: '/register',
-        //     element: <RegisterPage />,
-        // },
+        {
+            path: '/unauthorized',
+            element: <UnauthorizedPage />,
+        },
         {
             path: '/',
             element: isSecurityEnabled ? (
@@ -60,7 +61,7 @@ function Router() {
         {
             path: '/admin',
             element: isSecurityEnabled ? (
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="ADMIN">
                     {' '}
                     <AdminLayout />
                 </ProtectedRoute>

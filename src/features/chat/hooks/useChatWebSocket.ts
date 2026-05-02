@@ -37,7 +37,11 @@ function tagLastUserMessage(
     });
 }
 
-export function useChatWebSocket() {
+type UseChatWebSocketOptions = {
+    enabled: boolean;
+};
+
+export function useChatWebSocket({ enabled }: UseChatWebSocketOptions) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [streamingContent, setStreamingContent] = useState<string | null>(
         null,
@@ -58,9 +62,12 @@ export function useChatWebSocket() {
     const warningTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const rateLimitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const shouldReconnectRef = useRef(false);
     const [rateLimitedUntil, setRateLimitedUntil] = useState<number | null>(null);
 
     const connect = useCallback(() => {
+        if (!enabled) return;
+
         const ws = new WebSocket(getWsUrl());
 
         ws.onopen = () => {
@@ -73,41 +80,39 @@ export function useChatWebSocket() {
             const response: ChatWebSocketResponse = JSON.parse(event.data);
 
             switch (response.type) {
-                case "CONFIG":
+                case 'CONFIG':
                     setMaxMessageLength(response.maxMessageLength);
                     break;
 
-                case "MESSAGE":
+                case 'MESSAGE':
                     setMessages((prev) => [...prev, response.message]);
                     setSending(false);
                     break;
 
-                case "WARNING":
-                    tagLastUserMessage(setMessages, "LOW");
+                case 'WARNING':
+                    tagLastUserMessage(setMessages, 'LOW');
                     setWarning(response.text);
                     if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
                     warningTimerRef.current = setTimeout(() => setWarning(null), 5000);
                     break;
 
-                case "BLOCKED":
-                    tagLastUserMessage(setMessages, "HIGH");
+                case 'BLOCKED':
+                    tagLastUserMessage(setMessages, 'HIGH');
                     setError(response.text);
                     setSending(false);
                     if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
                     errorTimerRef.current = setTimeout(() => setError(null), 5000);
                     break;
 
-                case "STREAM_START":
-                    setStreamingContent("");
+                case 'STREAM_START':
+                    setStreamingContent('');
                     break;
 
-                case "STREAM_TOKEN":
-                    setStreamingContent((prev) =>
-                        prev !== null ? prev + response.token : response.token,
-                    );
+                case 'STREAM_TOKEN':
+                    setStreamingContent((prev) => (prev !== null ? prev + response.token : response.token));
                     break;
 
-                case "STREAM_END":
+                case 'STREAM_END':
                     setStreamingContent(null);
                     if (response.message) {
                         setMessages((prev) => [...prev, response.message]);
@@ -115,14 +120,14 @@ export function useChatWebSocket() {
                     setSending(false);
                     break;
 
-                case "ERROR":
+                case 'ERROR':
                     setError(response.text);
                     setSending(false);
                     if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
                     errorTimerRef.current = setTimeout(() => setError(null), 5000);
                     break;
 
-                case "RATE_LIMITED":
+                case 'RATE_LIMITED':
                     setSending(false);
                     setRateLimitedUntil(Date.now() + response.retryAfterMs);
                     setWarning(`Too many messages. Please wait ${Math.ceil(response.retryAfterMs / 1000)}s.`);
@@ -138,11 +143,10 @@ export function useChatWebSocket() {
             setConnected(false);
             wsRef.current = null;
 
+            if(!shouldReconnectRef.current) return;
+
             // Reconnect with exponential backoff
-            const delay = Math.min(
-                1000 * Math.pow(2, reconnectAttemptRef.current),
-                MAX_RECONNECT_DELAY,
-            );
+            const delay = Math.min(1000 * Math.pow(2, reconnectAttemptRef.current), MAX_RECONNECT_DELAY);
 
             reconnectAttemptRef.current += 1;
             reconnectTimerRef.current = setTimeout(connect, delay);
@@ -153,14 +157,21 @@ export function useChatWebSocket() {
         };
 
         wsRef.current = ws;
-    }, []);
+    }, [enabled]);
 
     useEffect(() => {
-        connect();
+        shouldReconnectRef.current = enabled;
+
+        if(enabled){
+            connect();
+        }
 
         return () => {
+            shouldReconnectRef.current = false;
+
             if (reconnectTimerRef.current) {
                 clearTimeout(reconnectTimerRef.current);
+                reconnectTimerRef.current = null;
             }
 
             if (warningTimerRef.current) {
@@ -177,46 +188,43 @@ export function useChatWebSocket() {
 
             if (wsRef.current) {
                 wsRef.current.close();
+                wsRef.current = null;
             }
+
+            setConnected(false);
         };
-    }, [connect]);
+    }, [connect, enabled]);
 
-    const sendMessage = useCallback(
-        (conversationId: number, content: string) => {
-            if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-                setError("Not connected to server");
-                if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
-                errorTimerRef.current = setTimeout(() => setError(null), 3000);
+    const sendMessage = useCallback((conversationId: number, content: string) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+            setError('Not connected to server');
+            if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+            errorTimerRef.current = setTimeout(() => setError(null), 3000);
 
-                return;
-            }
+            return;
+        }
 
-            setSending(true);
+        setSending(true);
 
-            const msg: ChatWebSocketMessage = {
-                type: "SEND_MESSAGE",
-                conversationId,
-                content,
-            };
+        const msg: ChatWebSocketMessage = {
+            type: 'SEND_MESSAGE',
+            conversationId,
+            content,
+        };
 
-            wsRef.current.send(JSON.stringify(msg));
-        },
-        [],
-    );
+        wsRef.current.send(JSON.stringify(msg));
+    }, []);
 
-    const stopGeneration = useCallback(
-        (conversationId: number) => {
-            if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+    const stopGeneration = useCallback((conversationId: number) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
 
-            const msg: ChatWebSocketMessage = {
-                type: "STOP_GENERATION",
-                conversationId,
-            };
+        const msg: ChatWebSocketMessage = {
+            type: 'STOP_GENERATION',
+            conversationId,
+        };
 
-            wsRef.current.send(JSON.stringify(msg));
-        },
-        [],
-    );
+        wsRef.current.send(JSON.stringify(msg));
+    }, []);
 
     const resetChat = useCallback(() => {
         setMessages([]);

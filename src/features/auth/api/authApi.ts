@@ -32,10 +32,10 @@ export async function fetchCurrentUser(): Promise<AuthUser | null> {
 
 export async function logoutUser(): Promise<void> {
     try {
-        await apiClient.post<AuthUser>(authEndpoints.getLogout);
+        await apiClient.post(authEndpoints.getLogout);
     } catch (error) {
         if (isAuthError(error)) {
-            console.error(error);
+            return;
         }
         throw error;
     }
@@ -52,22 +52,9 @@ export async function fetchLocalDevSecurityStatus(): Promise<LocalDevSecurity> {
     }
 }
 
-// export async function registerUser(): Promise<AuthUser> {
-//     const response = await apiClient.post<AuthUser>(authEndpoints.getRegister);
-//
-//     return response.data;
-// }
-
 export function getLoginPage() {
     const baseUrl = import.meta.env.VITE_AUTH_BASE_URL;
     const login = authEndpoints.getLogin;
 
     return `${baseUrl}${login}`;
 }
-
-// export function getRegisterPage() {
-//     const baseUrl = import.meta.env.VITE_AUTH_BASE_URL;
-//     const register = authEndpoints.getRegister;
-//
-//     return `${baseUrl}${register}`;
-// }

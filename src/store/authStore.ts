@@ -48,20 +48,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
     },
 
-    // register: async () => {
-    //     set({ isLoading: true });
-    //     try {
-    //         const user = await registerUser();
-    //
-    //         set({
-    //             authUser: user,
-    //             isAuthenticated: true,
-    //         });
-    //     } finally {
-    //         set({ isLoading: false });
-    //     }
-    // },
-
     logout: async () => {
         set({ isLoading: true });
         try {
@@ -70,7 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
                 authUser: null,
                 isAuthenticated: false,
             });
-            window.location.href = getLoginPage();
+            window.location.href = '/login';
         } finally {
             set({ isLoading: false });
         }

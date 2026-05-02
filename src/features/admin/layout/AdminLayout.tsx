@@ -24,6 +24,7 @@ import {
 } from "@mui/icons-material";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import bossbotLogo from "../../../assets/images/bossbot.svg";
+import { useAuthStore } from '../../../store/authStore';
 
 const drawerWidth = 240;
 
@@ -80,10 +81,8 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // TODO: Get from auth context
-  // const isAdmin = MOCK_USER_ROLE === 'ADMIN';
-  const isLoggedIn = false; // TODO: Get from auth context
+  const {authUser, logout} = useAuthStore();
+  const isAdmin = authUser?.roleName === 'ADMIN';
 
   // Remove root element borders for admin layout
   useEffect(() => {
@@ -123,13 +122,8 @@ export default function AdminLayout() {
     setDrawerOpen(false);
   };
 
-  const handleAuthAction = () => {
-    // TODO: Implement login/logout logic
-    if (isLoggedIn) {
-      console.log("Logout clicked");
-    } else {
-      console.log("Login clicked");
-    }
+  const handleLogout = async () => {
+      await logout();
   };
 
   const drawer = (
@@ -145,7 +139,7 @@ export default function AdminLayout() {
         </Typography>
       </Box>
       <List>
-        {menuItems.map((item) => (
+        {(isAdmin ? menuItems : []).map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
               onClick={() => handleNavigation(item.path, item.enabled)}
@@ -219,8 +213,8 @@ export default function AdminLayout() {
               BossBot Admin
             </Typography>
           </Box>
-          <Button color="inherit" onClick={handleAuthAction}>
-            {isLoggedIn ? "Logi välja" : "Logi sisse"}
+          <Button color="inherit" onClick={handleLogout}>
+            Logi välja
           </Button>
         </Toolbar>
       </AppBar>
