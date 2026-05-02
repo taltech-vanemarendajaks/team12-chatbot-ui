@@ -52,13 +52,16 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ isLoading: true });
         try {
             await logoutUser();
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
             set({
                 authUser: null,
                 isAuthenticated: false,
+                isLoading: false
             });
+
             window.location.href = '/login';
-        } finally {
-            set({ isLoading: false });
         }
     },
 }));
