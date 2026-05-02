@@ -1,5 +1,11 @@
 import { create } from 'zustand';
-import { type AuthUser, fetchCurrentUser, getLoginPage, logoutUser } from '../features/auth/api/authApi';
+import {
+    type AuthUser,
+    fetchCurrentUser,
+    getLoginPage,
+    logoutUser,
+    // registerUser,
+} from '../features/auth/api/authApi';
 
 type AuthState = {
     authUser: AuthUser | null;
@@ -8,6 +14,7 @@ type AuthState = {
     checkAuthenticated: () => Promise<void>;
     setAuthUser: (user: AuthUser | null) => void;
     login: () => Promise<void>;
+    // register: () => Promise<void>;
     logout: () => Promise<void>;
 };
 
@@ -40,6 +47,20 @@ export const useAuthStore = create<AuthState>((set) => ({
             set({ isLoading: false });
         }
     },
+
+    // register: async () => {
+    //     set({ isLoading: true });
+    //     try {
+    //         const user = await registerUser();
+    //
+    //         set({
+    //             authUser: user,
+    //             isAuthenticated: true,
+    //         });
+    //     } finally {
+    //         set({ isLoading: false });
+    //     }
+    // },
 
     logout: async () => {
         set({ isLoading: true });

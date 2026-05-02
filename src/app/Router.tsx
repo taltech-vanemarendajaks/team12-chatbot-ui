@@ -12,6 +12,7 @@ import { ProtectedRoute } from '../features/auth/ProtectedRoute';
 import { fetchLocalDevSecurityStatus } from '../features/auth/api/authApi';
 import { useEffect, useState } from 'react';
 import Spinner from '@/shared/ui/Spinner.tsx';
+// import { RegisterPage } from '@/features/auth/pages/RegisterPage.tsx';
 
 /**
  * React component that configures and provides the application's routes.
@@ -41,17 +42,31 @@ function Router() {
             path: '/login',
             element: <LoginPage />,
         },
+        // {
+        //     path: '/register',
+        //     element: <RegisterPage />,
+        // },
         {
             path: '/',
-            element: isSecurityEnabled
-                ? <ProtectedRoute> <ChatPage /></ProtectedRoute>
-                : <ChatPage />,
+            element: isSecurityEnabled ? (
+                <ProtectedRoute>
+                    {' '}
+                    <ChatPage />
+                </ProtectedRoute>
+            ) : (
+                <ChatPage />
+            ),
         },
         {
             path: '/admin',
-            element: isSecurityEnabled
-                ? <ProtectedRoute> <AdminLayout /></ProtectedRoute>
-                : <AdminLayout />,
+            element: isSecurityEnabled ? (
+                <ProtectedRoute>
+                    {' '}
+                    <AdminLayout />
+                </ProtectedRoute>
+            ) : (
+                <AdminLayout />
+            ),
             children: [
                 {
                     index: true,

@@ -52,9 +52,22 @@ export async function fetchLocalDevSecurityStatus(): Promise<LocalDevSecurity> {
     }
 }
 
+// export async function registerUser(): Promise<AuthUser> {
+//     const response = await apiClient.post<AuthUser>(authEndpoints.getRegister);
+//
+//     return response.data;
+// }
+
 export function getLoginPage() {
     const baseUrl = import.meta.env.VITE_AUTH_BASE_URL;
     const login = authEndpoints.getLogin;
 
     return `${baseUrl}${login}`;
 }
+
+// export function getRegisterPage() {
+//     const baseUrl = import.meta.env.VITE_AUTH_BASE_URL;
+//     const register = authEndpoints.getRegister;
+//
+//     return `${baseUrl}${register}`;
+// }
