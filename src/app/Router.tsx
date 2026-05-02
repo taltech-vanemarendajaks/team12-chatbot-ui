@@ -13,6 +13,7 @@ import { fetchLocalDevSecurityStatus } from '../features/auth/api/authApi';
 import { useEffect, useState } from 'react';
 import Spinner from '@/shared/ui/Spinner.tsx';
 import { UnauthorizedPage } from '../features/auth/pages/UnauthorizedPage.tsx';
+import { AuthLandingPage } from '@/features/auth/pages/AuthLandingPage.tsx';
 // import { RegisterPage } from '@/features/auth/pages/RegisterPage.tsx';
 
 /**
@@ -52,7 +53,7 @@ function Router() {
             element: isSecurityEnabled ? (
                 <ProtectedRoute>
                     {' '}
-                    <ChatPage />
+                    <AuthLandingPage />
                 </ProtectedRoute>
             ) : (
                 <ChatPage />

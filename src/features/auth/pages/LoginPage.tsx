@@ -17,6 +17,7 @@ export const LoginPage = () => {
     const login = useAuthStore((state) => state.login);
     const isLoading = useAuthStore((state) => state.isLoading);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const authUser = useAuthStore((state) => state.authUser);
 
     const isDark = useMemo(() => {
         if (typeof window !== 'undefined' && window.matchMedia) {
@@ -34,7 +35,7 @@ export const LoginPage = () => {
     }
 
     if (isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to={authUser?.roleName === 'ADMIN' ? "/admin" : "/"} replace />;
     }
 
     // Set button and logo colors based on theme
