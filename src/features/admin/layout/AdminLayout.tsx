@@ -11,7 +11,6 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Button,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -25,11 +24,9 @@ import {
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import bossbotLogo from "../../../assets/images/bossbot.svg";
 import { useAuthStore } from '../../../store/authStore';
+import LogoutButton from '@/shared/ui/LogoutButton.tsx';
 
 const drawerWidth = 240;
-
-// Mock user role - TODO: Replace with actual auth
-// const MOCK_USER_ROLE = 'ADMIN'; // Change to 'USER' to test non-admin view
 
 interface MenuItem {
   text: string;
@@ -81,7 +78,7 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const {authUser, logout} = useAuthStore();
+  const {authUser} = useAuthStore();
   const isAdmin = authUser?.roleName === 'ADMIN';
 
   // Remove root element borders for admin layout
@@ -120,10 +117,6 @@ export default function AdminLayout() {
     // Normal navigation for other routes
     navigate(path);
     setDrawerOpen(false);
-  };
-
-  const handleLogout = async () => {
-      await logout();
   };
 
   const drawer = (
@@ -213,9 +206,7 @@ export default function AdminLayout() {
               BossBot Admin
             </Typography>
           </Box>
-          <Button color="inherit" onClick={handleLogout}>
-            Logi välja
-          </Button>
+          <LogoutButton />
         </Toolbar>
       </AppBar>
 

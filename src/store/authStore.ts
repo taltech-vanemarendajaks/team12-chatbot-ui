@@ -29,6 +29,16 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const user = await fetchCurrentUser();
             set({ authUser: user, isAuthenticated: user !== null });
+
+            const shouldRedirectAfterLogin = localStorage.getItem('redirectAfterLogin') === 'true';
+
+            if (user?.roleName === 'ADMIN' && shouldRedirectAfterLogin) {
+                localStorage.removeItem('redirectAfterLogin');
+
+                if (window.location.pathname !== '/admin/chatbot') {
+                    window.location.replace('/admin/chatbot');
+                }
+            }
         } catch (error) {
             console.error('CheckAuthenticated error:', error);
             set({ authUser: null, isAuthenticated: false });
@@ -42,6 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     login: async () => {
         set({ isLoading: true });
         try {
+            localStorage.setItem('redirectAfterLogin', 'true');
             window.location.href = getLoginPage();
         } finally {
             set({ isLoading: false });
