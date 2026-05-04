@@ -4,32 +4,36 @@ import path from "path"
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react()],
-    resolve: {
-        dedupe: ['react', 'react-dom'],
-        alias: {
-            '@': path.resolve(__dirname, 'src'),
-        },
+  plugins: [react()],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
     },
-    optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom'],
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        ws: true,
+      },
+      "/ws": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        ws: true,
+      },
+      "/oauth2": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/login": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
-    server: {
-        proxy: {
-            '/api': {
-                target: 'http://localhost:8080',
-                changeOrigin: true,
-                ws: true,
-            },
-            '/auth': {
-                target: 'http://localhost:8080',
-                changeOrigin: true,
-            },
-            '/ws': {
-                target: 'http://localhost:8080',
-                changeOrigin: true,
-                ws: true,
-            },
-        },
-    },
-});
+  },
+})
