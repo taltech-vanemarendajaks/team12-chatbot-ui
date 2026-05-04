@@ -12,6 +12,9 @@ import { ProtectedRoute } from '../features/auth/ProtectedRoute';
 import { fetchLocalDevSecurityStatus } from '../features/auth/api/authApi';
 import { useEffect, useState } from 'react';
 import Spinner from '@/shared/ui/Spinner.tsx';
+import { UnauthorizedPage } from '../features/auth/pages/UnauthorizedPage.tsx';
+import { AuthLandingPage } from '@/features/auth/pages/AuthLandingPage.tsx';
+import UsersPage from '@/features/users/pages/UsersPage.tsx';
 
 /**
  * React component that configures and provides the application's routes.
@@ -42,16 +45,30 @@ function Router() {
             element: <LoginPage />,
         },
         {
+            path: '/unauthorized',
+            element: <UnauthorizedPage />,
+        },
+        {
             path: '/',
-            element: isSecurityEnabled
-                ? <ProtectedRoute> <ChatPage /></ProtectedRoute>
-                : <ChatPage />,
+            element: isSecurityEnabled ? (
+                <ProtectedRoute>
+                    {' '}
+                    <AuthLandingPage />
+                </ProtectedRoute>
+            ) : (
+                <ChatPage />
+            ),
         },
         {
             path: '/admin',
-            element: isSecurityEnabled
-                ? <ProtectedRoute> <AdminLayout /></ProtectedRoute>
-                : <AdminLayout />,
+            element: isSecurityEnabled ? (
+                <ProtectedRoute requiredRole="ADMIN">
+                    {' '}
+                    <AdminLayout />
+                </ProtectedRoute>
+            ) : (
+                <AdminLayout />
+            ),
             children: [
                 {
                     index: true,
@@ -75,7 +92,7 @@ function Router() {
                 },
                 {
                     path: 'users',
-                    element: <div>Kasutajad - Tuleb varsti</div>,
+                    element: <UsersPage />,
                 },
             ],
         },

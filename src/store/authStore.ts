@@ -1,5 +1,11 @@
 import { create } from 'zustand';
-import { type AuthUser, fetchCurrentUser, getLoginPage, logoutUser } from '../features/auth/api/authApi';
+import {
+    type AuthUser,
+    fetchCurrentUser,
+    getLoginPage,
+    logoutUser,
+    // registerUser,
+} from '../features/auth/api/authApi';
 
 type AuthState = {
     authUser: AuthUser | null;
@@ -8,6 +14,7 @@ type AuthState = {
     checkAuthenticated: () => Promise<void>;
     setAuthUser: (user: AuthUser | null) => void;
     login: () => Promise<void>;
+    // register: () => Promise<void>;
     logout: () => Promise<void>;
 };
 
@@ -22,6 +29,16 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const user = await fetchCurrentUser();
             set({ authUser: user, isAuthenticated: user !== null });
+
+            const shouldRedirectAfterLogin = localStorage.getItem('redirectAfterLogin') === 'true';
+
+            if (user?.roleName === 'ADMIN' && shouldRedirectAfterLogin) {
+                localStorage.removeItem('redirectAfterLogin');
+
+                if (window.location.pathname !== '/admin/chatbot') {
+                    window.location.replace('/admin/chatbot');
+                }
+            }
         } catch (error) {
             console.error('CheckAuthenticated error:', error);
             set({ authUser: null, isAuthenticated: false });
@@ -35,6 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     login: async () => {
         set({ isLoading: true });
         try {
+            localStorage.setItem('redirectAfterLogin', 'true');
             window.location.href = getLoginPage();
         } finally {
             set({ isLoading: false });
@@ -45,13 +63,16 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ isLoading: true });
         try {
             await logoutUser();
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
             set({
                 authUser: null,
                 isAuthenticated: false,
+                isLoading: false
             });
-            window.location.href = getLoginPage();
-        } finally {
-            set({ isLoading: false });
+
+            window.location.href = '/login';
         }
     },
 }));

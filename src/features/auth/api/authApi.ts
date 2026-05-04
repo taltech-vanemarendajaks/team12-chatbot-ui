@@ -1,6 +1,6 @@
 import { apiClient } from '../../../shared/services/apiClient.ts';
 import { authEndpoints } from './endpoints';
-import { isAxiosError } from 'axios';
+import { isForbiddenError, isUnauthorizedError } from '@/shared/services/apiError';
 
 export type AuthUser = {
     id: number;
@@ -14,7 +14,7 @@ export type LocalDevSecurity = {
 };
 
 function isAuthError(error: unknown): boolean {
-    return isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403);
+    return isUnauthorizedError(error) || isForbiddenError(error);
 }
 
 export async function fetchCurrentUser(): Promise<AuthUser | null> {
@@ -32,10 +32,10 @@ export async function fetchCurrentUser(): Promise<AuthUser | null> {
 
 export async function logoutUser(): Promise<void> {
     try {
-        await apiClient.post<AuthUser>(authEndpoints.getLogout);
+        await apiClient.post(authEndpoints.getLogout);
     } catch (error) {
         if (isAuthError(error)) {
-            console.error(error);
+            return;
         }
         throw error;
     }
