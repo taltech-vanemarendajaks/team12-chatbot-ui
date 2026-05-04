@@ -22,6 +22,9 @@ import {
     SidebarAddButton,
     SidebarDeleteButton,
 } from "../styles/sidebarStyles";
+import { Box } from '@mui/material';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import LogoutButton from '@/shared/ui/LogoutButton.tsx';
 
 type ConversationSidebarProps = {
     conversations: Conversation[];
@@ -42,6 +45,7 @@ export function ConversationSidebar({
     const [showCreate, setShowCreate] = useState(false);
     const [title, setTitle] = useState("");
     const [deleteId, setDeleteId] = useState<number | null>(null);
+    const { isAuthenticated } = useAuth();
 
     const handleConfirmDelete = () => {
         if (deleteId !== null) {
@@ -112,11 +116,7 @@ export function ConversationSidebar({
                                 placeholder="Conversation title..."
                                 autoFocus
                             />
-                            <SidebarAddButton
-                                size="small"
-                                onClick={handleCreate}
-                                disabled={!title.trim()}
-                            >
+                            <SidebarAddButton size="small" onClick={handleCreate} disabled={!title.trim()}>
                                 <AddIcon fontSize="small" />
                             </SidebarAddButton>
                         </SidebarCreateForm>
@@ -133,14 +133,8 @@ export function ConversationSidebar({
                                     onClick={() => onSelect(conversation.id)}
                                 >
                                     <SidebarItemInfo>
-                                        <SidebarItemTitle>
-                                            {conversation.title}
-                                        </SidebarItemTitle>
-                                        <SidebarItemTime>
-                                            {formatDateTime(
-                                                conversation.updatedAt,
-                                            )}
-                                        </SidebarItemTime>
+                                        <SidebarItemTitle>{conversation.title}</SidebarItemTitle>
+                                        <SidebarItemTime>{formatDateTime(conversation.updatedAt)}</SidebarItemTime>
                                     </SidebarItemInfo>
                                     <SidebarDeleteButton
                                         size="small"
@@ -149,9 +143,7 @@ export function ConversationSidebar({
                                             setDeleteId(conversation.id);
                                         }}
                                     >
-                                        <DeleteOutlineIcon
-                                            fontSize="small"
-                                        />
+                                        <DeleteOutlineIcon fontSize="small" />
                                     </SidebarDeleteButton>
                                 </SidebarItem>
                             ))
@@ -167,6 +159,19 @@ export function ConversationSidebar({
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setDeleteId(null)}
             />
+            <Box
+                component="div"
+                sx={{
+                    position: 'fixed',
+                    left: 16,
+                    bottom: 16,
+                    zIndex: 1300,
+                }}
+            >
+                {isAuthenticated && (
+                    <LogoutButton />
+                )}
+            </Box>
         </SidebarRoot>
     );
 }

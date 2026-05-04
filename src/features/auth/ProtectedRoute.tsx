@@ -4,9 +4,10 @@ import React from 'react';
 
 type ProtectedRouteProps = {
     children: React.ReactNode;
-}
+    requiredRole?: 'ADMIN' | 'USER';
+};
 
-export function ProtectedRoute({ children }: ProtectedRouteProps){
+export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps){
     const { authUser, isLoading, isAuthenticated } = useAuthStore();
 
     if(isLoading){
@@ -15,6 +16,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps){
 
     if(!isAuthenticated || !authUser){
         return <Navigate to="/login" replace />
+    }
+
+    if (requiredRole && authUser.roleName !== requiredRole) {
+        return <Navigate to="/unauthorized" replace />;
     }
 
     return <>{children}</>;

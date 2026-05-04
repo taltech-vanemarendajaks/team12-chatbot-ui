@@ -12,6 +12,8 @@ import { ConversationSidebar } from "../components/ConversationSidebar";
 import { MessageInput } from "../components/MessageInput";
 import { MessageList } from "../components/MessageList";
 import { Notification } from "../components/Notification";
+import { useAuthStore } from '../../../store/authStore';
+
 import { useChatWebSocket } from "../hooks/useChatWebSocket";
 import {
     ChatLayoutRoot,
@@ -28,6 +30,7 @@ export function ChatPage() {
         number | null
     >(null);
     const [loadingMessages, setLoadingMessages] = useState(false);
+    const {isAuthenticated, isLoading} = useAuthStore();
 
     const {
         messages,
@@ -42,7 +45,7 @@ export function ChatPage() {
         stopGeneration,
         resetChat,
         rateLimitedUntil,
-    } = useChatWebSocket();
+    } = useChatWebSocket({enabled: isAuthenticated && !isLoading});
 
     // Load conversations on connect
     useEffect(() => {
